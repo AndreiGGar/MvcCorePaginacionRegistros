@@ -1,0 +1,33 @@
+﻿@model List<Empleado>
+
+<h4>Vista Empleados</h4>
+
+@if (Model != null)
+{
+    <table class="table table-active table-hover w-100 table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Apellido</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Empleado emp in Model)
+            {
+                <tr>
+                    <td>@emp.IdEmpleado</td>
+                    <td>@emp.Apellido</td>
+                    <td>@emp.Oficio</td>
+                    <td>@emp.Salario</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h4>Ningún departamento seleccionado</h4>
+}
+
