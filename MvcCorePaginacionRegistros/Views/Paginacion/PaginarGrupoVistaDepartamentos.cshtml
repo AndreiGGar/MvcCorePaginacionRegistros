@@ -1,0 +1,47 @@
+﻿@model IEnumerable<MvcCorePaginacionRegistros.Models.VistaDepartamento>
+
+@{
+    ViewData["Title"] = "PaginarGrupoVistaDepartamento";
+    int numeroregistros = (int)ViewData["REGISTROS"];
+    int numeropagina = 1;
+}
+
+<h4>Paginar Grupo Vista Departamento</h4>
+
+<ul class="list-group list-group-horizontal">
+    @for (int i = 1; i <= numeroregistros; i+=2)
+    {
+        <li class="list-group-item list-group-item-danger">
+            <a asp-asp-controller="Paginacion" a-action="PaginarGrupoVistaDepartamentos" asp-route-posicion="@i">
+                @numeropagina
+            </a>
+        </li>
+        numeropagina += 1;
+    }
+</ul>
+
+<hr />
+@Html.Raw(ViewData["LINKS"])
+<hr />
+
+<table class="table table-dark table-active table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>POSICION</th>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th>LOCALIDAD</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Posicion</td>
+                <td>@item.DeptNo</td>
+                <td>@item.Nombre</td>
+                <td>@item.Loc</td>
+            </tr>
+        }
+    </tbody>
+</table>

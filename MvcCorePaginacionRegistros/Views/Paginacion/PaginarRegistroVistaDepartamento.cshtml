@@ -1,0 +1,40 @@
+﻿@model VistaDepartamento
+
+<h4 class="mb-4">
+    Paginación individual Vista Departamentos
+</h4>
+
+<h5 class="mb-4">
+    Registro @Model.Posicion de @ViewData["ULTIMO"]
+</h5>
+
+<div class="mb-4">
+    <ul class="list-group list-group-horizontal">
+        <li class="list-group-item">
+            <a asp-controller="Paginacion" asp-action="PaginarRegistroVistaDepartamento" asp-route-posicion="1">
+                Primero
+            </a>
+            <a asp-controller="Paginacion" asp-action="PaginarRegistroVistaDepartamento" asp-route-posicion="@ViewData["ANTERIOR"]">
+                Anterior
+            </a>
+            <a asp-controller="Paginacion" asp-action="PaginarRegistroVistaDepartamento" asp-route-posicion="@ViewData["SIGUIENTE"]">
+                Siguiente
+            </a>
+            <a asp-controller="Paginacion" asp-action="PaginarRegistroVistaDepartamento" asp-route-posicion="@ViewData["ULTIMO"]">
+                Ultimo
+            </a>
+        </li>
+    </ul>
+</div>
+
+<ul class="list-group">
+    <li class="list-group-item list-group-item-info">
+        Número: @Model.DeptNo
+    </li>
+    <li class="list-group-item list-group-item-danger">
+        Nombre: @Model.Nombre
+    </li>
+    <li class="list-group-item list-group-item-warning">
+        Localidad: @Model.Loc
+    </li>
+</ul>

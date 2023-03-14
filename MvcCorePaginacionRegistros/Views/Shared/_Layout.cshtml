@@ -26,6 +26,15 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         @await Component.InvokeAsync("MenuDepartamentos")
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Paginacion" asp-action="PaginarRegistroVistaDepartamento">Paginacion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Paginacion" asp-action="PaginarGrupoVistaDepartamentos">Paginacion GRUPO</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Paginacion" asp-action="PaginarGrupoDepartamentos">Paginacion Procedure</a>
+                        </li>
                     </ul>
                 </div>
             </div>
