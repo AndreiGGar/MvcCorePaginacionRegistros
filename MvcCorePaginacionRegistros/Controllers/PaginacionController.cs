@@ -7,7 +7,7 @@ namespace MvcCorePaginacionRegistros.Controllers
     public class PaginacionController : Controller
     {
         private RepositoryHospital repo;
-        public PaginacionController (RepositoryHospital repo)
+        public PaginacionController(RepositoryHospital repo)
         {
             this.repo = repo;
         }
@@ -15,6 +15,47 @@ namespace MvcCorePaginacionRegistros.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public async Task<IActionResult> EmpleadosOficio(int? posicion, int? cantidad, string oficio)
+        {
+            if (posicion == null)
+            {
+                posicion = 1;
+                cantidad = 2;
+                return View();
+            }
+            {
+                PaginarEmpleados model = await this.repo.GetEmpleadosOficioAsync(posicion.Value, cantidad.Value, oficio);
+                List<Empleado> empleados = model.Empleados;
+                int numregistros = model.NumeroRegistros;
+                ViewData["REGISTROS"] = numregistros;
+                ViewData["CANTIDAD"] = cantidad;
+                ViewData["OFICIO"] = oficio;
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EmpleadosOficio(int cantidad, string oficio)
+        {
+            PaginarEmpleados model = new PaginarEmpleados();
+            if (cantidad == null)
+            {
+                model = await this.repo.GetEmpleadosOficioAsync(1, 1, oficio);
+            }
+            else
+            {
+                model = await this.repo.GetEmpleadosOficioAsync(1, cantidad, oficio);
+            }
+            List<Empleado> empleados = model.Empleados;
+            int numregistros = model.NumeroRegistros;
+            /*List<Empleado> empleados = await this.repo.GetEmpleadosOficioAsync(1, oficio);
+            int numregistros = this.repo.GetNumeroEmpleadosOficio(oficio);*/
+            ViewData["REGISTROS"] = numregistros;
+            ViewData["CANTIDAD"] = cantidad;
+            ViewData["OFICIO"] = oficio;
+            return View(model);
         }
 
         public async Task<IActionResult> PaginarGrupoDepartamentos(int? posicion)

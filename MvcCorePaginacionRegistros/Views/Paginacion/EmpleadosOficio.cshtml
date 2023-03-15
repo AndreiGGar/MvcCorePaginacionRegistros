@@ -1,0 +1,71 @@
+﻿@model PaginarEmpleados
+
+@{
+    int numregistros = 0;
+    int cantidad = 0;
+    string oficio = "";
+    int numeropagina = 1;
+    if (ViewData["REGISTROS"] != null)
+    {
+        numregistros = (int)ViewData["REGISTROS"];
+        cantidad = (int)ViewData["CANTIDAD"];
+        oficio = ViewData["OFICIO"].ToString();
+    }
+}
+
+<h4>Empleados Oficio</h4>
+
+<form method="post" class="form">
+    <label>Introduce oficio</label>
+    <input type="text" name="oficio" class="form-control" required />
+    <label>Selecciona cantidad</label>
+    <select class="form-select" name="cantidad">
+        <option value="1"></option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <button class="btn btn-info">
+        Buscar Empleados
+    </button>
+</form>
+
+@if (Model != null)
+{
+    <ul class="list-group list-group-horizontal">
+        @for (int i = 1; i <= numregistros; i += cantidad)
+        {
+            <li class="list-group-item list-group-item-info">
+                <a asp-asp-controller="Paginacion" a-action="EmpleadosOficio" asp-route-posicion="@i" asp-route-oficio="@oficio" asp-route-cantidad="@cantidad">
+                    @numeropagina
+                </a>
+            </li>
+            numeropagina += 1;
+        }
+    </ul>
+
+    <table class="table table-dark table-active table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>APELLIDO</th>
+                <th>OFICIO</th>
+                <th>SALARIO</th>
+                <th>DEPT NO</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Empleados)
+            {
+                <tr>
+                    <td>@item.IdEmpleado</td>
+                    <td>@item.Apellido</td>
+                    <td>@item.Oficio</td>
+                    <td>@item.Salario</td>
+                    <td>@item.Dept_no</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

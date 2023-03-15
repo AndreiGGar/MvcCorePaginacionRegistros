@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MvcCorePaginacionRegistros.Context;
 using MvcCorePaginacionRegistros.Models;
+using System.Data;
 
 namespace MvcCorePaginacionRegistros.Repositories
 {
@@ -27,6 +28,12 @@ namespace MvcCorePaginacionRegistros.Repositories
         AS 
             SELECT * FROM (SELECT CAST(ROW_NUMBER() OVER (ORDER BY APELLIDO) AS INT) AS POSICION, ISNULL(EMP_NO, 0) AS EMP_NO, APELLIDO, OFICIO, SALARIO, DEPT_NO FROM EMP WHERE DEPT_NO = @DEPT_NO) AS QUERY WHERE QUERY.POSICION >= @POSICION AND QUERY.POSICION < (@POSICION + 3)
         GO
+        CREATE PROCEDURE SP_GRUPO_EMPLEADOS_OFICIO (@POSICION INT, @OFICIO NVARCHAR(50))
+        AS
+	        SELECT EMP_NO, APELLIDO, OFICIO, SALARIO, DEPT_NO FROM
+	        (SELECT CAST(ROW_NUMBER() OVER (ORDER BY APELLIDO) AS INT) AS POSICION, EMP_NO, APELLIDO, OFICIO, SALARIO, DEPT_NO FROM EMP WHERE OFICIO = @OFICIO) AS QUERY
+	        WHERE QUERY.POSICION >= @POSICION AND QUERY.POSICION < (@POSICION + 3)
+        GO
      */
     #endregion
     public class RepositoryHospital
@@ -51,6 +58,29 @@ namespace MvcCorePaginacionRegistros.Repositories
         public int GetNumeroRegistrosVistaEmpleadoDept(int deptno)
         {
             return this.context.VistaEmpleados.Count(x => x.Dept_no == deptno);
+        }
+
+        public int GetNumeroEmpleadosOficio(string oficio)
+        {
+            return this.context.VistaEmpleados.Count(x => x.Oficio == oficio);
+        }
+
+        public async Task<PaginarEmpleados> GetEmpleadosOficioAsync(int posicion, int cantidad, string oficio)
+        {
+            string sql = "SP_GRUPO_EMPLEADOS_OFICIO @POSICION, @CANTIDAD, @OFICIO, @NUMEROREGISTROS OUT";
+            SqlParameter pamposicion = new SqlParameter("@POSICION", posicion);
+            SqlParameter pamcantidad = new SqlParameter("@CANTIDAD", cantidad);
+            SqlParameter pamoficio = new SqlParameter("@OFICIO", oficio);
+            SqlParameter pamregistros = new SqlParameter("@NUMEROREGISTROS", -1);
+            pamregistros.Direction = ParameterDirection.Output;
+            var consulta = this.context.Empleados.FromSqlRaw(sql, pamposicion, pamcantidad, pamoficio, pamregistros);
+            List<Empleado> empleados = await consulta.ToListAsync();
+            int registros = (int)pamregistros.Value;
+            return new PaginarEmpleados
+            {
+                NumeroRegistros = registros,
+                Empleados = empleados,
+            };
         }
 
         public async Task<List<Departamento>> GetDepartamentoAsync(int posicion)
