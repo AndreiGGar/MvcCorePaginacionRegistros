@@ -22,7 +22,7 @@ namespace MvcCorePaginacionRegistros.Controllers
             if (posicion == null)
             {
                 posicion = 1;
-                cantidad = 2;
+                cantidad = 1;
                 return View();
             }
             {
@@ -40,14 +40,7 @@ namespace MvcCorePaginacionRegistros.Controllers
         public async Task<IActionResult> EmpleadosOficio(int cantidad, string oficio)
         {
             PaginarEmpleados model = new PaginarEmpleados();
-            if (cantidad == null)
-            {
-                model = await this.repo.GetEmpleadosOficioAsync(1, 1, oficio);
-            }
-            else
-            {
-                model = await this.repo.GetEmpleadosOficioAsync(1, cantidad, oficio);
-            }
+            model = await this.repo.GetEmpleadosOficioAsync(1, cantidad, oficio);
             List<Empleado> empleados = model.Empleados;
             int numregistros = model.NumeroRegistros;
             /*List<Empleado> empleados = await this.repo.GetEmpleadosOficioAsync(1, oficio);
